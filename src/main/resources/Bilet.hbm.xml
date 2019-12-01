@@ -1,0 +1,14 @@
+<hibernate-mapping>
+    <class name="Bilet" table="Bilet">
+        <id name="idBilet" type="int">
+            <column name="Id_biletu" precision="5" scale="0"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="idSiedzenie" type="int">
+            <column name="Id_siedzenia" precision="5" scale="0"/>
+        </property>
+        <property name="cena" type="float">
+            <column name="Cena" precision="2" scale="0"/>
+        </property>
+    </class>
+</hibernate-mapping>
