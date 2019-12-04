@@ -1,6 +1,22 @@
 import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Entity;
+
+import javax.persistence.*;
+
 @Getter
+@Setter
+@Entity
+@Table(name = "Bilety")
 public class Bilet {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id_biletu")
+    private int idBilet;
+    @Column(name = "Id_siedzenia")
+    private int idSiedzenie;
+    @Column(name = "cena")
+    private float cena;
     public Bilet(){
 
     }
@@ -9,7 +25,8 @@ public class Bilet {
         this.idSiedzenie = idSiedzenie;
         this.cena = cena;
     }
-    private int idBilet;
-    private int idSiedzenie;
-    private float cena;
+    /*@Override
+    public String toString(){
+        return "Bilet [id="+idBilet+
+    }*/
 }

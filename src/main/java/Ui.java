@@ -1,18 +1,24 @@
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.hibernate.Session;
+
+import java.util.List;
 
 public class Ui extends Application {
-    BorderPane login;
-    BorderPane admin;
-    BorderPane user;
+    private BorderPane login;
+    private BorderPane admin;
+    private  BorderPane user;
 
 
     public void prepareLoginScene(Scene scene){
@@ -86,12 +92,21 @@ public class Ui extends Application {
     public void prepareAdminScene(){
         admin = new BorderPane();
         admin.setPrefSize(1000, 800);
-
+        //oznacz tryby ktory jest aktywny, user czy administrator
+        Session session = HibernateSession.getSessionFactory().openSession();
+        List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
+        final ObservableList<Kierowcy> data = FXCollections.observableArrayList(kierowcies);
+        System.out.println(data.get(1).getIdAutokaru());
         TableView tableView = new TableView();
         TableColumn one = new TableColumn("Imie");
+        one.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Imie"));
         TableColumn two = new TableColumn("Nazwisko");
+        two.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Nazwisko"));
         TableColumn three = new TableColumn("Pensja");
+        three.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Pensja"));
         TableColumn four = new TableColumn("Autokar");
+        four.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Autokar"));
+        tableView.setItems(data);
         tableView.getColumns().addAll(one,two,three,four);
 
         VBox vBox = new VBox();
