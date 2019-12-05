@@ -17,6 +17,9 @@
         <property name="hibernate.dbcp.maxWaitMillis">-1</property>
         <mapping class="Bilet"/>
         <mapping class="Kierowcy"/>
+        <mapping class="Autokary"/>
+        <mapping class="Kursy"/>
+        <mapping class="Trasy"/>
         <!--<mapping resource="Bilet.hbm.xml"></mapping>-->
     </session-factory>
 </hibernate-configuration>

@@ -99,13 +99,13 @@ public class Ui extends Application {
         System.out.println(data.get(1).getIdAutokaru());
         TableView tableView = new TableView();
         TableColumn one = new TableColumn("Imie");
-        one.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Imie"));
+        one.setCellValueFactory(new PropertyValueFactory<>("Imie"));
         TableColumn two = new TableColumn("Nazwisko");
-        two.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Nazwisko"));
+        two.setCellValueFactory(new PropertyValueFactory<>("Nazwisko"));
         TableColumn three = new TableColumn("Pensja");
-        three.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Pensja"));
+        three.setCellValueFactory(new PropertyValueFactory<>("Pensja"));
         TableColumn four = new TableColumn("Autokar");
-        four.setCellValueFactory(new PropertyValueFactory<Kierowcy,String>("Autokar"));
+        four.setCellValueFactory(new PropertyValueFactory<>("Autokar"));
         tableView.setItems(data);
         tableView.getColumns().addAll(one,two,three,four);
 
@@ -140,10 +140,44 @@ public class Ui extends Application {
         drivers.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Session session = HibernateSession.getSessionFactory().openSession();
+                List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
 
             }
         });
-        navigate.getItems().addAll(kurs,drivers);
+        MenuItem users = new MenuItem("Lista użytkowników");
+        users.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Session session = HibernateSession.getSessionFactory().openSession();
+                List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
+
+            }
+        });
+        MenuItem kursy = new MenuItem("Lista Kursów");
+        kursy.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Session session = HibernateSession.getSessionFactory().openSession();
+                //List<Kierowcy> kierowcies = session.createQuery("from Kursy",Kursy.class).list();
+
+            }
+        });
+        MenuItem autokary = new MenuItem("Lista Autokarów");
+        autokary.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Session session = HibernateSession.getSessionFactory().openSession();
+                List<Autokary> autokars = session.createQuery("from Autokary",Autokary.class).list();
+                final ObservableList<Autokary> data = FXCollections.observableArrayList(autokars);
+                admin.getChildren().remove(tableView);
+                TableViewHelper a = new TableViewHelper(data);
+                a.setItems(data);
+                admin.setCenter(a);
+
+            }
+        });
+        navigate.getItems().addAll(kurs,drivers,autokary);
 
         Menu raports = new Menu("Generacja raportów");
         MenuItem week = new MenuItem("Tygodniowy");
