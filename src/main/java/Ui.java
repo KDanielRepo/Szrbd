@@ -16,182 +16,53 @@ import org.hibernate.Session;
 import java.util.List;
 
 public class Ui extends Application {
-    private BorderPane login;
-    private BorderPane admin;
-    private  BorderPane user;
+    private LoginScene login;
+    private AdminScene admin;
+    private WorkerScene worker;
+    private UserScene user;
+    private Stage pStage;
 
 
-    public void prepareLoginScene(Scene scene){
-        login = new BorderPane();
-        login.setPrefSize(1000, 800);
-        login.setPadding(new Insets(300,300,300,300));
-        scene.setRoot(login);
-        VBox vBox = new VBox();
-        Label loginLabel = new Label("login: ");
-        TextArea loginArea = new TextArea();
-        loginArea.setPrefSize(150,150);
-        Label passwordLabel = new Label("password: ");
-        TextArea passwordArea = new TextArea();
-        passwordArea.setPrefSize(150,150);
-        Label status = new Label();
-        Button button = new Button("connect");
-        button.setOnAction(new EventHandler<ActionEvent>() {
+    public void prepareLoginScene(Scene scene) {
+        login = new LoginScene(scene);
+        login.getLoginButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(loginArea.getText().equals("a")&&passwordArea.getText().equals("b")){
-                    status.setText("nice");
+                if  (login.getLoginArea().getText().equals("a") && (login.getPasswordArea().getText().equals("b"))) {
                     prepareAdminScene();
                     scene.setRoot(admin);
-                }else if(loginArea.getText().equals("a")&&passwordArea.getText().equals("c")){
+                } else if (login.getLoginArea().getText().equals("a") && ( login.getPasswordArea().getText().equals("c"))) {
                     prepareUserScene();
                     scene.setRoot(user);
+                } else if(login.getLoginArea().getText().equals("a") && ( login.getPasswordArea().getText().equals("d"))){
+                    prepareWorkerScene();
+                    scene.setRoot(worker);
                 }else{
-                    status.setText("not nice");
+                    //status.setText("not nice");
                 }
             }
         });
-        vBox.getChildren().add(loginLabel);
-        vBox.getChildren().add(loginArea);
-        vBox.getChildren().add(passwordLabel);
-        vBox.getChildren().add(passwordArea);
-        vBox.getChildren().add(button);
-        vBox.getChildren().add(status);
-        login.setCenter(vBox);
     }
-    public void prepareUserScene(){
-        user = new BorderPane();
-        user.setPrefSize(1000, 800);
-        HBox hBox = new HBox();
-        Button button = new Button("lista kursów");
-        Button button1 = new Button("kup bilet");
-        //Button button2 = new Button("cos jeszcze");
-        hBox.getChildren().add(button);
-        hBox.getChildren().add(button1);
-        //hBox.getChildren().add(button2);
-        user.setTop(hBox);
 
-        VBox center = new VBox();
-        Label label = new Label("Lista kursów: ");
-        center.getChildren().add(label);
-        user.setCenter(center);
-        VBox left = new VBox();
-        left.setPrefSize(200,200);
-        Label label1 = new Label("kurs z: ");
-        Label label2 = new Label("kurs do: ");
-        TextArea area = new TextArea();
-        area.setPrefSize(200,100);
-        TextArea area1 = new TextArea();
-        area1.setPrefSize(200,100);
-        left.getChildren().add(label1);
-        left.getChildren().add(area);
-        left.getChildren().add(label2);
-        left.getChildren().add(area1);
-        user.setLeft(left);
+    public void prepareUserScene() {
+        user = new UserScene();
+        pStage.setTitle("SZRBD  ZALOGOWANY JAKO: UŻYTKOWNIK");
         //user.setCenter(button);
     }
-    public void prepareAdminScene(){
-        admin = new BorderPane();
-        admin.setPrefSize(1000, 800);
-        //oznacz tryby ktory jest aktywny, user czy administrator
-        Session session = HibernateSession.getSessionFactory().openSession();
-        List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
-        final ObservableList<Kierowcy> data = FXCollections.observableArrayList(kierowcies);
-        System.out.println(data.get(1).getIdAutokaru());
-        TableView tableView = new TableView();
-        TableColumn one = new TableColumn("Imie");
-        one.setCellValueFactory(new PropertyValueFactory<>("Imie"));
-        TableColumn two = new TableColumn("Nazwisko");
-        two.setCellValueFactory(new PropertyValueFactory<>("Nazwisko"));
-        TableColumn three = new TableColumn("Pensja");
-        three.setCellValueFactory(new PropertyValueFactory<>("Pensja"));
-        TableColumn four = new TableColumn("Autokar");
-        four.setCellValueFactory(new PropertyValueFactory<>("Autokar"));
-        tableView.setItems(data);
-        tableView.getColumns().addAll(one,two,three,four);
 
-        VBox vBox = new VBox();
-        /*vBox.setPadding(new Insets(200,0,0,0));
-        Label from = new Label("Trasa z: ");
-        TextArea a = new TextArea();
-        a.setPrefSize(100,100);
-        Label to = new Label("Trasa do: ");
-        TextArea b = new TextArea();
-        b.setPrefSize(100,100);
-        vBox.getChildren().addAll(from,a,to,b);*/
-        vBox.setVisible(false);
+    public void prepareAdminScene() {
+        admin = new AdminScene();
+        pStage.setTitle("SZRBD  ZALOGOWANY JAKO: ADMINISTRATOR");
 
-        MenuBar menuBar = new MenuBar();
-        Menu edit = new Menu("Edycja");
-        MenuItem add = new MenuItem("Dodaj rekord");
-        MenuItem delete = new MenuItem("Usuń rekord");
-        MenuItem save = new MenuItem("Zapisz zmiany");
-        MenuItem discard = new MenuItem("Odrzuć zmiany");
-        edit.getItems().addAll(add,delete,save,discard);
-
-        Menu navigate = new Menu("Nawigacja");
-        MenuItem kurs = new MenuItem("Lista kursów");
-        kurs.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
-        MenuItem drivers = new MenuItem("Lista kierowców");
-        drivers.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Session session = HibernateSession.getSessionFactory().openSession();
-                List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
-
-            }
-        });
-        MenuItem users = new MenuItem("Lista użytkowników");
-        users.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Session session = HibernateSession.getSessionFactory().openSession();
-                List<Kierowcy> kierowcies = session.createQuery("from Kierowcy",Kierowcy.class).list();
-
-            }
-        });
-        MenuItem kursy = new MenuItem("Lista Kursów");
-        kursy.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Session session = HibernateSession.getSessionFactory().openSession();
-                //List<Kierowcy> kierowcies = session.createQuery("from Kursy",Kursy.class).list();
-
-            }
-        });
-        MenuItem autokary = new MenuItem("Lista Autokarów");
-        autokary.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Session session = HibernateSession.getSessionFactory().openSession();
-                List<Autokary> autokars = session.createQuery("from Autokary",Autokary.class).list();
-                final ObservableList<Autokary> data = FXCollections.observableArrayList(autokars);
-                admin.getChildren().remove(tableView);
-                TableViewHelper a = new TableViewHelper(data);
-                a.setItems(data);
-                admin.setCenter(a);
-
-            }
-        });
-        navigate.getItems().addAll(kurs,drivers,autokary);
-
-        Menu raports = new Menu("Generacja raportów");
-        MenuItem week = new MenuItem("Tygodniowy");
-        MenuItem month = new MenuItem("Miesięczny");
-        raports.getItems().addAll(week,month);
-
-        menuBar.getMenus().addAll(edit,navigate,raports);
-
-        admin.setLeft(vBox);
-        admin.setCenter(tableView);
-        admin.setTop(menuBar);
     }
+    public void prepareWorkerScene(){
+        worker = new WorkerScene();
+        pStage.setTitle("SZRBD  ZALOGOWANY JAKO: PRACOWNIK");
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        pStage = primaryStage;
         BorderPane borderPane = new BorderPane();
         VBox a = new VBox();
         Scene scene = new Scene(borderPane);
@@ -222,6 +93,6 @@ public class Ui extends Application {
     }
 
     public static void main(String[] args) {
-        launch(Ui.class,args);
+        launch(Ui.class, args);
     }
 }
