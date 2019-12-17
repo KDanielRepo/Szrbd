@@ -21,20 +21,20 @@ public class Ui extends Application {
     private WorkerScene worker;
     private UserScene user;
     private Stage pStage;
-
+    private Scene scene;
 
     public void prepareLoginScene(Scene scene) {
         login = new LoginScene(scene);
         login.getLoginButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if  (login.getLoginArea().getText().equals("a") && (login.getPasswordArea().getText().equals("b"))) {
+                if  (login.getLoginArea().getText().equals("admin") && (login.getPasswordArea().getText().equals("admin"))) {
                     prepareAdminScene();
                     scene.setRoot(admin);
-                } else if (login.getLoginArea().getText().equals("a") && ( login.getPasswordArea().getText().equals("c"))) {
+                } else if (login.getLoginArea().getText().equals("user") && ( login.getPasswordArea().getText().equals("user"))) {
                     prepareUserScene();
                     scene.setRoot(user);
-                } else if(login.getLoginArea().getText().equals("a") && ( login.getPasswordArea().getText().equals("d"))){
+                } else if(login.getLoginArea().getText().equals("worker") && ( login.getPasswordArea().getText().equals("worker"))){
                     prepareWorkerScene();
                     scene.setRoot(worker);
                 }else{
@@ -45,51 +45,35 @@ public class Ui extends Application {
     }
 
     public void prepareUserScene() {
-        user = new UserScene();
+        user = new UserScene(this.pStage);
         pStage.setTitle("SZRBD  ZALOGOWANY JAKO: UŻYTKOWNIK");
         //user.setCenter(button);
     }
 
     public void prepareAdminScene() {
-        admin = new AdminScene();
+        admin = new AdminScene(this.pStage);
         pStage.setTitle("SZRBD  ZALOGOWANY JAKO: ADMINISTRATOR");
-
     }
     public void prepareWorkerScene(){
-        worker = new WorkerScene();
+        worker = new WorkerScene(this.pStage);
         pStage.setTitle("SZRBD  ZALOGOWANY JAKO: PRACOWNIK");
+    }
+    public void ini(Stage s){
+        pStage = s;
+        BorderPane borderPane = new BorderPane();
+        scene = new Scene(borderPane);
+        prepareLoginScene(scene);
+        borderPane.setPrefSize(1000, 800);
+        pStage.setTitle("SZRBD");
+        pStage.setScene(scene);
+        pStage.show();
     }
 
     @Override
     public void start(Stage primaryStage) {
         pStage = primaryStage;
-        BorderPane borderPane = new BorderPane();
-        VBox a = new VBox();
-        Scene scene = new Scene(borderPane);
-        prepareLoginScene(scene);
-        Button button = new Button("test");
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                scene.setRoot(a);
-            }
-        });
-        Button button1 = new Button("test2");
+        ini(primaryStage);
 
-        a.getChildren().add(button1);
-        borderPane.setCenter(button);
-        borderPane.setPrefSize(1000, 800);
-        //Scene scene = new Scene(borderPane);
-        primaryStage.setTitle("SZRBD");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        button1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //Scene scene = new Scene(borderPane);
-                scene.setRoot(borderPane);
-            }
-        });
     }
 
     public static void main(String[] args) {

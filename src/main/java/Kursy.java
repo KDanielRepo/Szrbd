@@ -1,22 +1,32 @@
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "Kursy")
 @Getter
 @Setter
+@Entity
+@Table(name = "Kursy")
 public class Kursy {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id_kursu")
-    private int idKursu;
+    @Column(name = "Id_kursy")
+    private Integer idKursu;
     @Column(name = "Id_trasy")
-    private int idTrasy;
+    private Integer idTrasy;
     @Column(name = "Data_odjazdu")
     private Date dataOdjazdu;
     @Column(name = "Data_przyjazdu")
     private Date dataPrzyjazdu;
+    public Kursy(){
+
+    }
+    public Kursy(Integer idKursu, Integer idTrasy, Date dataOdjazdu, Date dataPrzyjazdu){
+        this.idKursu = idKursu;
+        this.idTrasy = idTrasy;
+        this.dataOdjazdu = dataOdjazdu;
+        this.dataPrzyjazdu = dataPrzyjazdu;
+    }
+
 }

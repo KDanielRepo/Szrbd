@@ -7,24 +7,23 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "Kierowcy")
-public class Kierowcy {
+public class Kierowcy{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_kierowcy")
-    private int idKierowcy;
+    private Integer idKierowcy;
     @Column(name = "Id_autokaru")
-    private int idAutokaru;
+    private Integer idAutokaru;
     @Column(name = "imie")
     private String imie;
     @Column(name = "nazwisko")
     private String nazwisko;
     @Column(name = "pensja")
-    private int pensja;
+    private Float pensja;
 
     public Kierowcy(){
 
     }
-    public Kierowcy(int idKierowcy, int idAutokaru,String imie,String nazwisko, int pensja){
+    public Kierowcy(Integer idKierowcy, Integer idAutokaru,String imie,String nazwisko, Float pensja){
         this.idKierowcy = idKierowcy;
         this.idAutokaru = idAutokaru;
         this.imie = imie;

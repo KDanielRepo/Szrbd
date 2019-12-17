@@ -11,10 +11,9 @@ import javax.persistence.*;
 @Setter
 public class Autokary {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_autokaru")
-    private int idAutokaru;
-    @Column(nullable = true,name = "Id_kierowcy")
+    private Integer idAutokaru;
+    @Column(name = "Id_kierowcy")
     private Integer idKierowcy;
     @Column(name = "Nr_rej")
     private String nrRej;
@@ -26,7 +25,7 @@ public class Autokary {
     public Autokary(){
 
     }
-    public Autokary(int idAutokaru,int idKierowcy,String nrRej,String marka,String model){
+    public Autokary(Integer idAutokaru,Integer idKierowcy,String nrRej,String marka,String model){
         this.idAutokaru = idAutokaru;
         this.idKierowcy = idKierowcy;
         this.nrRej = nrRej;
