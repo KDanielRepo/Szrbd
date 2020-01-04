@@ -21,6 +21,7 @@
         <mapping class="Kursy"/>
         <mapping class="Trasy"/>
         <mapping class="Siedzenie"/>
+        <mapping class="TrasyMiasta"/>
         <!--<mapping resource="Bilet.hbm.xml"></mapping>-->
     </session-factory>
 </hibernate-configuration>

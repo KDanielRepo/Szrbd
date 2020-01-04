@@ -36,23 +36,31 @@ public class UserScene extends BorderPane {
     }
     public void searchFor(){
         Session session = HibernateSession.getSessionFactory().openSession();
-        String query = "select Id_kursy,Trasy.Id_trasy,Data_odjazdu,Data_przyjazdu from Kursy\n" +
+        String query = "select Lp,mi.Nazwa_miejsc,Data_odjazdu,Data_przyjazdu,Kursy.Id_Kursy from Kursy\n" +
+                "                inner join Trasy on Kursy.Id_trasy = Trasy.Id_trasy\n" +
+                "\t\t\t\tinner join Trasa_Miasta on Trasy.Id_trasy = Trasa_Miasta.Id_trasy\n" +
+                "\t\t\t\tinner join Miejscowosci mi on Trasa_Miasta.Id_miejscowosci = mi.Id_miejscowosci\n" +
+                "                inner join Miejscowosci on Trasy.Id_miejscowosci = Miejscowosci.Id_miejscowosci\n" +
+                "                inner join Miejscowosci m on Trasy.Mie_Id_miejscowosci = m.Id_miejscowosci\n" +
+                "                where Miejscowosci.Nazwa_miejsc = '"+a.getText()+"' and m.Nazwa_miejsc = '"+b.getText()+"'\n" +
+                "\t\t\t\torder by Lp asc\n";
+        /*String query = "select Id_kursy,Trasy.Id_trasy,Data_odjazdu,Data_przyjazdu from Kursy\n" +
                 "inner join Trasy on Kursy.Id_trasy = Trasy.Id_trasy\n" +
                 "inner join Miejscowosci on Trasy.Id_miejscowosci = Miejscowosci.Id_miejscowosci\n" +
                 "inner join Miejscowosci m on Trasy.Mie_Id_miejscowosci = m.Id_miejscowosci\n" +
-                "where Miejscowosci.Nazwa_miejsc = '"+a.getText()+"' and m.Nazwa_miejsc = '"+b.getText()+"'\n";
-        List<?> list = session.createNativeQuery(query,Kursy.class).list();
+                "where Miejscowosci.Nazwa_miejsc = '"+a.getText()+"' and m.Nazwa_miejsc = '"+b.getText()+"'\n";*/
+        List<?> list = session.createNativeQuery(query,TrasyMiasta.class).list();
         final ObservableList<?> data = FXCollections.observableArrayList(list);
         this.getChildren().remove(tableView);
         try {
-            tableView = new TableViewHelper(data);
+            tableView = new TableViewHelper(data,"o");
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         tableView.setItems(data);
         this.setCenter(tableView);
     }
-    public void showTickets(Kursy k){
+    public void showTickets(TrasyMiasta k){
         Session session = null;
         if(k != null){
             session = HibernateSession.getSessionFactory().openSession();
@@ -119,7 +127,7 @@ public class UserScene extends BorderPane {
         checkTickets.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                showTickets((Kursy) tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex()));
+                showTickets((TrasyMiasta) tableView.getItems().get(tableView.getSelectionModel().getFocusedIndex()));
             }
         });
         Button buy = new Button("Zamów bilet");
